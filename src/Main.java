@@ -16,8 +16,6 @@ public class Main {
         System.out.println("You selected "+ rounds + "rounds");
 
 
-
-
     }
 
     static int[][] nextGen (int[][] matrix){
@@ -40,7 +38,6 @@ public class Main {
         }
         return matrix;
     }
-
     static int sumMatrix(int[][] matrix){
         int sum = 0;
 
