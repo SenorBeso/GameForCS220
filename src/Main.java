@@ -9,18 +9,30 @@ public class Main {
         Scanner scan = new Scanner(System.in);
 
         int rounds;
-
         System.out.println("enter the number of rounds");
         rounds = scan.nextInt();
-
         System.out.println("You selected "+ rounds + "rounds");
 
 
+        //Prints the Game
+        for(int i = 0; i <= rounds; i++) {
+            for (int row = 0; row < 10; row++) {
+                System.out.println();
+                //nested for loop for the columns
+                for (int col = 0; col < 10; col++) {
+                    System.out.print(generation[row][col] + "\t");
+                }
+            }
+            futureGen = nextGen(generation);
+            System.arraycopy(futureGen, 0, generation, 0, generation.length);
+            System.out.println();
+            System.out.println("Generation "+ i);
+        }
     }
 
     static int[][] nextGen (int[][] matrix){
         for (int i = 0; i < 10; i++ ){
-            for (int j = 0; j< 10; j++){
+            for (int j = 0; j < 10; j++){
                 //new cell is born
                 if (matrix[i][j] == 0 && sumMatrix(matrix) == 3){
                     matrix[i][j] = 1;
@@ -32,7 +44,7 @@ public class Main {
                     matrix[i][j] = 0;
                 //Stays the same
                 } else {
-                    matrix[i][j] = 0;
+                    future[i][j] = matrix[i][j];
                 }
             }
         }
@@ -99,5 +111,4 @@ public class Main {
         }
         return sum;
     }
-
 }
