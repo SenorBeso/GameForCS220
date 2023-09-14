@@ -1,3 +1,9 @@
+/**
+ * @author Steven Behrens & Aiden Kiss
+ * @Version 9.14.23
+ * A Recreation of The Game of Life
+ */
+
 import java.util.Scanner;
 
 public class Main {
@@ -6,8 +12,19 @@ public class Main {
         int [][] generation = new int[10][10];
         int [][] futureGen;
 
+        // Fill the Array with user inputted values
         Scanner scan = new Scanner(System.in);
+        System.out.println("How many cells would you like in the neighborhood?");
+        int amtOfCells = scan.nextInt();
+        for(int i = 0; i < amtOfCells; i++){
+            System.out.println("Please enter x value");
+            int x = scan.nextInt();
+            System.out.println("Please enter y value");
+            int y = scan.nextInt();
+            generation[x][y] = 1;
+        }
 
+        //Determines the amount of generations produced
         int rounds;
         System.out.println("enter the number of rounds");
         rounds = scan.nextInt();
@@ -31,82 +48,46 @@ public class Main {
     }
 
     static int[][] nextGen (int[][] matrix){
+        int[][] future = new int[10][10];
         for (int i = 0; i < 10; i++ ){
             for (int j = 0; j < 10; j++){
                 //new cell is born
-                if (matrix[i][j] == 0 && sumMatrix(matrix) == 3){
-                    matrix[i][j] = 1;
+                if (matrix[i][j] == 0 && sumMatrix(matrix,i,j) == 3){
+                    future[i][j] = 1;
                 //Cell dies of over population
-                } else if(matrix[i][j] == 1 && sumMatrix(matrix) > 3){
-                    matrix[i][j] = 0;
+                } else if(matrix[i][j] == 1 && sumMatrix(matrix,i,j) > 3){
+                    future[i][j] = 0;
                 //Cell is lonely and dies
-                } else if (matrix[i][j] == 1 && sumMatrix(matrix) < 2) {
-                    matrix[i][j] = 0;
+                } else if (matrix[i][j] == 1 && sumMatrix(matrix,i,j) < 2) {
+                    future[i][j] = 0;
                 //Stays the same
                 } else {
                     future[i][j] = matrix[i][j];
                 }
             }
         }
-        return matrix;
+        return future;
     }
-    static int sumMatrix(int[][] matrix){
+
+    static int sumMatrix(int[][] matrix, int x, int y) {
         int sum = 0;
+        int[][] neighbors = {
+            {-1, -1},
+            {-1, 0},
+            {-1, 1},
+            {0, -1},
+            {0, 1},
+            {1, -1},
+            {1, 0},
+            {1, 1}
+        };
 
-        for (int row = 0; row < 10; row++){
-            //nested for loop for the columns
-            for (int col = 0; col < 10; col++){
-                //for summing the middle of the array
-                if(row > 0 && row < 9 && col >0 && col < 9){
-                    sum = (matrix[row-1][col-1])+(matrix[row-1][col])+(matrix[row-1][col+1])
-                        +(matrix[row][col-1]) +(matrix[row][col+1])+
-                        (matrix[row+1][col-1])+(matrix[row+1][col])+(matrix[row+1][col+1]);
-                }
-                //for summing the corners of the array
-                //top left corner
-                if(row==0 && col == 0){
-                    sum = (matrix[row][col+1])+(matrix[row+1][col])+(matrix[row+1][col+1]);
-                }
-                //top right corner
-                if(row==0 && col == 9){
-                    sum = (matrix[row][col-1])+(matrix[row+1][col])+(matrix[row+1][col-1]);
-                }
+        for(int i = 0; i < neighbors.length; i++) {
+            int newX = x + neighbors[i][0];
+            int newY = y + neighbors[i][1];
 
-                //bottom left corner
-                if(row==9 && col == 0){
-                    sum = (matrix[row][col+1])+(matrix[row-1][col])+(matrix[row-1][col+1]);
-                }
-
-                //bottom right corner
-                if(row==9 && col == 9){
-                    sum = (matrix[row][col-1])+(matrix[row-1][col])+(matrix[row-1][col-1]);
-                }
-
-                //for summing the outer rows
-                //top row
-                if (row==0 && (col>0 && col <9 )) {
-                    sum = (matrix[row][col - 1]) + (matrix[row][col + 1]) +
-                        (matrix[row + 1][col - 1]) + (matrix[row + 1][col]) + (matrix[row + 1][col + 1]);
-                }
-
-                //bottom row
-                if (row==9 && (col>0 && col <9 )){
-                    sum = (matrix[row][col-1]) + (matrix[row][col+1])
-                        +(matrix[row-1][col-1])+(matrix[row-1][col])+(matrix[row-1][col+1]);
-                }
-
-                //for summing the outer columns
-                //left column
-                if (col==0 && (row >0 && row < 9)) {
-                    sum = (matrix[row][col+1])+(matrix[row-1][col])+(matrix[row+1][col])+
-                        (matrix[row-1][col+1])+(matrix[row+1][col+1]);
-                }
-
-                //right column
-                if (col==9 && (row >0 && row < 9)) {
-                    sum = (matrix[row][col-1])+(matrix[row-1][col])+(matrix[row+1][col])+
-                        (matrix[row+1][col-1])+(matrix[row-1][col-1]);
-                }
+            if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+                sum += matrix[newX][newY];
             }
         }
         return sum;
