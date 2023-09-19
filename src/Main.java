@@ -1,6 +1,6 @@
 /**
  * @author Steven Behrens & Aiden Kiss
- * @Version 9.14.23
+ * @Version 9.18.23
  * A Recreation of The Game of Life
  */
 
@@ -8,33 +8,52 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("How big would you like the game board to be? " + "\n" +
+            "(For example, inputting 10 creates a 10x10 board)");
 
         //Initializes the game board size
-        Scanner scan = new Scanner(System.in);
-        System.out.println("How big would you like the game board to be? " + "\n" +
-            "(For example, inputting 10 creates a 10x10 board");
         int boardSize = scan.nextInt();
-
+        while (boardSize <= 0){
+            System.out.println("Please enter a valid board size.");
+            boardSize = scan.nextInt();
+        }
         int [][] generation = new int[boardSize][boardSize];
         int [][] futureGen;
 
         // Fill the Array with user inputted values
         System.out.println("How many cells would you like in the neighborhood?");
         int amtOfCells = scan.nextInt();
+        while (amtOfCells < 0 || amtOfCells > boardSize*boardSize){
+            System.out.println("Please enter a valid amount of cells.");
+            amtOfCells = scan.nextInt();
+        }
         for(int i = 0; i < amtOfCells; i++){
             System.out.println("Please enter x value");
             int x = scan.nextInt();
+            while (x < 0 || x >= boardSize){
+                System.out.println("Please enter a valid x value.");
+                x = scan.nextInt();
+            }
             System.out.println("Please enter y value");
             int y = scan.nextInt();
+            while (y < 0 || y >= boardSize){
+                System.out.println("Please enter a valid y value.");
+                y = scan.nextInt();
+            }
             generation[x][y] = 1;
         }
 
         //Determines the amount of generations produced
         int rounds;
-        System.out.println("enter the number of rounds");
+        System.out.println("Please enter the number of rounds");
         rounds = scan.nextInt();
+        while (rounds < 0){
+            System.out.println("Please enter a valid number of rounds");
+            rounds = scan.nextInt();
+        }
         System.out.println("You selected "+ rounds + " rounds");
-
 
         //Prints the Game
         for(int i = 0; i <= rounds; i++) {
@@ -90,7 +109,6 @@ public class Main {
             {1, 0},
             {1, 1}
         };
-
         //This loop goes through each possible neighbor cell, and will add its value to the sum
         for(int i = 0; i < neighbors.length; i++) {
             int newX = x + neighbors[i][0];
