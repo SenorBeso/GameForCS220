@@ -9,11 +9,16 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        int [][] generation = new int[10][10];
+        //Initializes the game board size
+        Scanner scan = new Scanner(System.in);
+        System.out.println("How big would you like the game board to be? " + "\n" +
+            "(For example, inputting 10 creates a 10x10 board");
+        int boardSize = scan.nextInt();
+
+        int [][] generation = new int[boardSize][boardSize];
         int [][] futureGen;
 
         // Fill the Array with user inputted values
-        Scanner scan = new Scanner(System.in);
         System.out.println("How many cells would you like in the neighborhood?");
         int amtOfCells = scan.nextInt();
         for(int i = 0; i < amtOfCells; i++){
@@ -28,37 +33,40 @@ public class Main {
         int rounds;
         System.out.println("enter the number of rounds");
         rounds = scan.nextInt();
-        System.out.println("You selected "+ rounds + "rounds");
+        System.out.println("You selected "+ rounds + " rounds");
 
 
         //Prints the Game
         for(int i = 0; i <= rounds; i++) {
-            for (int row = 0; row < 10; row++) {
+            for (int row = 0; row < boardSize; row++) {
                 System.out.println();
                 //nested for loop for the columns
-                for (int col = 0; col < 10; col++) {
+                for (int col = 0; col < boardSize; col++) {
                     System.out.print(generation[row][col] + "\t");
                 }
             }
-            futureGen = nextGen(generation);
+            futureGen = nextGen(generation, boardSize);
             System.arraycopy(futureGen, 0, generation, 0, generation.length);
             System.out.println();
             System.out.println("Generation "+ i);
         }
     }
 
-    static int[][] nextGen (int[][] matrix){
-        int[][] future = new int[10][10];
-        for (int i = 0; i < 10; i++ ){
-            for (int j = 0; j < 10; j++){
+    /*This method is given the past generation, and based on the rules of the game, calculates whether a new cell is
+    born or killed. It returns the new array/generation
+     */
+    static int[][] nextGen (int[][] matrix, int boardSize){
+        int[][] future = new int[boardSize][boardSize];
+        for (int i = 0; i < boardSize; i++ ){
+            for (int j = 0; j < boardSize; j++){
                 //new cell is born
-                if (matrix[i][j] == 0 && sumMatrix(matrix,i,j) == 3){
+                if (matrix[i][j] == 0 && sumMatrix(matrix,i,j,boardSize) == 3){
                     future[i][j] = 1;
                 //Cell dies of over population
-                } else if(matrix[i][j] == 1 && sumMatrix(matrix,i,j) > 3){
+                } else if(matrix[i][j] == 1 && sumMatrix(matrix,i,j,boardSize) > 3){
                     future[i][j] = 0;
                 //Cell is lonely and dies
-                } else if (matrix[i][j] == 1 && sumMatrix(matrix,i,j) < 2) {
+                } else if (matrix[i][j] == 1 && sumMatrix(matrix,i,j,boardSize) < 2) {
                     future[i][j] = 0;
                 //Stays the same
                 } else {
@@ -69,7 +77,8 @@ public class Main {
         return future;
     }
 
-    static int sumMatrix(int[][] matrix, int x, int y) {
+    //This is the method that takes a sum of the cell's neighbors. The method returns a sum.
+    static int sumMatrix(int[][] matrix, int x, int y, int boardSize) {
         int sum = 0;
         int[][] neighbors = {
             {-1, -1},
@@ -82,11 +91,12 @@ public class Main {
             {1, 1}
         };
 
+        //This loop goes through each possible neighbor cell, and will add its value to the sum
         for(int i = 0; i < neighbors.length; i++) {
             int newX = x + neighbors[i][0];
             int newY = y + neighbors[i][1];
 
-            if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+            if (newX >= 0 && newX < boardSize && newY >= 0 && newY < boardSize) {
                 sum += matrix[newX][newY];
             }
         }
